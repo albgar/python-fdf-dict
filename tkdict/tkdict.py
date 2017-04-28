@@ -1,8 +1,11 @@
 """ Module with implementation of TKDict (translated-keys-dictionary) class.
 """
 # Not compatible with python3 due to string-specific translation.
+# TODO: use regular expressions for key translation
+# TODO: use @classmethods for key translation
 # `translate_key` could be turned into classmethod.
 # `transtab`, `stripchars`, `delchars` could be turned into classproperties.
+# TODO: repr-printing method may be handy
 
 from string import maketrans
 from collections import MutableMapping
@@ -44,11 +47,11 @@ class TKDict(MutableMapping):
         trans_key = self.translate_key(key)
         # check if we already have a translated key in _storage
         # if so, overwrite the value in tuple, but not the initial key
-        if trans_key in self._storage.keys():
+        try:
             old_value, initial_key = self._storage[trans_key]
             self._storage.__setitem__(trans_key, (value, initial_key))
-
-        self._storage.__setitem__(trans_key, (value, key))
+        except KeyError:
+            self._storage.__setitem__(trans_key, (value, key))
 
     def __getitem__(self, key):
         """ Translate the key, unpack value-tuple and return the value if exists or None. """
@@ -70,7 +73,7 @@ class TKDict(MutableMapping):
 
     def __delitem__(self, key):
         """ Translate the key, purge value-tuple """
-        self._d.__delitem__(self.translate_key(key))
+        self._storage.__delitem__(self.translate_key(key))
 
     def __iter__(self):
         return iter(self._storage)
