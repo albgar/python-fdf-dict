@@ -3,8 +3,6 @@
 # Not compatible with python3 due to string-specific translation.
 # TODO: use regular expressions for key translation
 # TODO: use @classmethods for key translation
-# `translate_key` could be turned into classmethod.
-# `transtab`, `stripchars`, `delchars` could be turned into classproperties.
 # TODO: repr-printing method may be handy
 
 from string import maketrans
@@ -16,13 +14,10 @@ class TKDict(MutableMapping):
     Stores (value, initial-key) tuples accessible by a translated key.
     """
 
+    @classmethod
     def translate_key(self, key):
-        """ Strips key-string from sides, translate internal chars and set to lowercase. """
-        transtab   = getattr(self, 'transtab', maketrans('', ''))
-        stripchars = getattr(self, 'stripchars', '')
-        delchars   = getattr(self, 'delchars', '')
-
-        return key.strip(stripchars).translate(transtab, delchars).lower()
+        """ Definition of a rule for key translation. """
+        raise NotImplementedError
 
     def __init__(self, *args, **kw):
         """ Create translated-keys-dictionary from initial data.
@@ -80,3 +75,12 @@ class TKDict(MutableMapping):
 
     def __len__(self):
         return len(self._storage)
+
+
+class FDict(TKDict):
+    """ FDict class represents data from .fdf-file. """
+    @classmethod
+    def translate_key(self, key):
+        return key.strip('-_')\
+                  .translate(maketrans('-', '_'), '.')\
+                  .lower()

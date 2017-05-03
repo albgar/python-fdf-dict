@@ -5,24 +5,12 @@ import unittest
 from string import maketrans
 
 from collections import MutableMapping
-from tkdict import TKDict
+from tkdict import TKDict, FDict
 
 
 class TestFDict(unittest.TestCase):
 
     def setUp(self):
-
-        class FDict(TKDict):
-            """ FDict class represents data from .fdf-file. """
-            # By defining the following arguments we specify key
-            # translation rules: keys in _storage dict are saved
-            # after stripping hyphens and underscores from both sides,
-            # deleting all dots and replacing hyphens with underscores
-            # in the middle.
-            transtab = maketrans('-', '_')
-            stripchars = '-_'
-            delchars = '.'
-
         self.FDict = FDict
 
     def test_should_translate_correctly(self):
