@@ -2,8 +2,6 @@
 """
 # Not compatible with python3 due to string-specific translation.
 # TODO: use regular expressions for key translation
-# TODO: repr-printing method may be handy
-# TODO: save last key occurence
 
 from string import maketrans
 from collections import MutableMapping
@@ -72,6 +70,12 @@ class TKDict(MutableMapping):
 
     def __len__(self):
         return len(self._storage)
+
+    def __repr__(self):
+        return self._storage.__repr__()
+
+    def __str__(self):
+        return self._storage.__str__()
 
 
 class FDict(TKDict):
