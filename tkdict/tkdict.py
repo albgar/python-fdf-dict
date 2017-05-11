@@ -45,7 +45,7 @@ class TKDict(MutableMapping):
         trans_key = self.translate_key(key)
         try:
             value, last_key = self._storage[trans_key]
-            self._storage.__setitem__(trans_key, (value, key))
+            # self._storage.__setitem__(trans_key, (value, key))
             return value
         except KeyError:
             return None
