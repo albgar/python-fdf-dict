@@ -21,7 +21,7 @@ class TestFDict(unittest.TestCase):
         f["pePe"] = 2.71
         t = f["Pepe"]
         self.assertEqual(t, 2.71)
-        self.assertEqual(f.keys(), ["Pepe"])
+        self.assertEqual(f.keys(), ["pePe"])
 
     def test_keys(self):
         f = self.FDict(fOO=5, BAr=7)
