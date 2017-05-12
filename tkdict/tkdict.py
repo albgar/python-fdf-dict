@@ -33,6 +33,12 @@ class TKDict(MutableMapping):
         # _storage keys are translated
         return [self.get_last_key(k) for k in self._storage.keys()]
 
+    def iterkeys(self):
+        'D.iterkeys() -> an iterator over the keys of D *** UPDATE'
+        for key in self:
+            value, last_key = self._storage[key]
+            yield last_key
+                                    
     def __setitem__(self, key, value):
         """ Store a (value, initial_key) tuple under translated key. """
         trans_key = self.translate_key(key)
@@ -45,11 +51,21 @@ class TKDict(MutableMapping):
         trans_key = self.translate_key(key)
         try:
             value, last_key = self._storage[trans_key]
-            # self._storage.__setitem__(trans_key, (value, key))
+            #self._storage.__setitem__(trans_key, (value, key))
             return value
         except KeyError:
             return None
 
+    def iteritems(self):
+        'D.iteritems() -> an iterator over the (key, value) items of D'
+        for key in self:
+            value, last_key = self._storage[key]
+            yield (last_key, value)
+
+    def items(self):
+        "D.items() -> list of D's (key, value) pairs, as 2-tuples"
+        return [(self._storage[key][1],self._storage[key][0]) for key in self]
+    
     def get_last_key(self, key):
         """ Translate the key, unpack value-tuple and return
         the corresponding initial key if exists or None.
@@ -85,3 +101,9 @@ class FDict(TKDict):
         return key.strip('-_')\
                   .translate(maketrans('_.', '--'), '')\
                   .lower()
+
+class FDFDict(TKDict):
+    """ FDFDict class represents data from .fdf-file. """
+    @classmethod
+    def translate_key(self, key):
+        return key.translate(None, '-.').lower()
