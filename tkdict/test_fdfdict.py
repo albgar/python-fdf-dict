@@ -85,6 +85,38 @@ class TestFDFDict(unittest.TestCase):
         f.clear()  # purge all values from fdict
         self.assertEqual(len(f), 0)
 
+    def deferred_test_additions(self):
+        """   This will fail because the first method tried to get
+              the keys of the 'g' dictionary is the standard __iter__,
+              which has not been intercepted. If we remove the first
+              case, all will work...
+              (this comes from the Python source)
+
+          if args:
+            other = args[0]
+            if isinstance(other, Mapping):    ---> REMOVE THIS
+                for key in other:
+                    self[key] = other[key]
+            elif hasattr(other, "keys"):
+                for key in other.keys():
+                    self[key] = other[key]
+            else:
+                for key, value in other:
+                    self[key] = value
+        """
+        
+        f = self.FDFDict(foo=5, bar=7, baz=13)
+        g = self.FDFDict()
+        g["FOO"]=777
+        g["f-o-o"]=123
+        g["b.a.z"]=22
+        g["pepe"]=45
+        f.update(g)
+        self.assertEqual(len(f), 4)
+        l = [k for k in f.iterkeys()]
+        self.assertEqual(l,["pepe","b.a.z","f-o-o","bar"])
+        self.assertEqual(f.values(),[45,22,123,7])
+        
 
 if __name__ == "__main__":
     unittest.main()
