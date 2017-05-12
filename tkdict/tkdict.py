@@ -1,4 +1,15 @@
 """ Module with implementation of TKDict (translated-keys-dictionary) class.
+    It is actually a dictionary with 'translation insensitive' keys. For
+    example, in the FDFDict subclass:
+
+        MD.TypeOfRun, md-type-of-run, mdTypeOfRun, mdtypeofrun
+
+    all represent the same key in the dictionary. The actual form of the
+    key returned by methods such as 'keys()' is the latest to be used in
+    a setting operation.
+
+    Vladimir Dikan and Alberto Garcia, 2017
+   
 """
 # Not compatible with python3 due to string-specific translation.
 # TODO: use regular expressions for key translation
