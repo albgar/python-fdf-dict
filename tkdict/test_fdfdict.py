@@ -64,6 +64,12 @@ class TestFDFDict(unittest.TestCase):
         self.assertIn("fOO", f.keys())
         self.assertIn("BAr", f.keys())
 
+    def test_unicode(self):
+        f = self.FDFDict()
+        f[u"md-type-of-run"] = "Broyden"
+        t =  f["MD.TypeOfRun"]
+        self.assertEqual(t,"Broyden")
+
     def test_mutations(self):
         f = self.FDFDict(foo=5, bar=7, baz=13)
         self.assertEqual(len(f), 3)

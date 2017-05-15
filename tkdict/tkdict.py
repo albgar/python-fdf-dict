@@ -109,6 +109,7 @@ class FDict(TKDict):
     """ FDict class represents data from .fdf-file. """
     @classmethod
     def translate_key(self, key):
+        # This will not work for unicode strings. See below
         return key.strip('-_')\
                   .translate(maketrans('_.', '--'), '')\
                   .lower()
@@ -117,4 +118,16 @@ class FDFDict(TKDict):
     """ FDFDict class represents data from .fdf-file. """
     @classmethod
     def translate_key(self, key):
-        return key.translate(None, '-.').lower()
+        # There are incompatible 'translate'
+        # methods for str and unicode objects... 
+        
+        if isinstance(key, unicode):
+            # Unicode uses a single dictionary for translation
+            to_remove = "-."
+            table = {ord(char): None for char in to_remove}
+            return key.translate(table).lower()
+        else:
+            # str accepts a translation map and an optional list of chars
+            # to remove
+            return key.translate(None, '-.').lower()
+        
